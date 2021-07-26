@@ -1,73 +1,65 @@
 
-var wall, thickness;
-var bullet,speed, weight;
+const Engine = Matter.Engine;
+const World = Matter.World;
+const Bodies = Matter.Bodies;
+const Body = Matter.Body;
+const Render = Matter.Render;
+var dustbinObj, paperObject,groundObject	
+var world;
+
 
 function setup() {
-  createCanvas(1600, 400);
-
-  speed=random(223,321)
-  weight=random(30,52)
+	createCanvas(1600, 700);
+	rectMode(CENTER);
 
 
-  thickness=random(22,83)
+	engine = Engine.create();
+	world = engine.world;
+	dustbinObj=new dustbin(1200,650);
+	paperObject=new paper(200,450,40);
+	groundObject=new ground(width/2,670,width,20);
+	//Create a Ground
+	
 
+	var render = Render.create({
+	  element: document.body,
+	  engine: engine,
+	  options: {
+	    width: 1200,
+	    height: 700,
+	    wireframes: false
+	  }
+	});
 
-
-
+	Engine.run(engine);
+	//Render.run(render);
   
-    bullet=createSprite(50, 200, 50,5);  
-    bullet.velocityX = speed;
-    bullet.shapeColor=color(255);
-
- 
-  	
-    
-    wall=createSprite(1200, 200, thickness, height/2);  
-
-    wall.shapeColor=color(230,230,230);
-  //wall.shapeColor=color(80,80,80)
 }
 
 
 function draw() {
-  background(0);  
-  //bullet.sprite.collide(wall.sprite,calculateDeformation)
-  if(hasCollided(bullet, wall))
-  {
-  	bullet.velocityX=0;
-  	var damage=0.5 * weight * speed* speed/(thickness *thickness *thickness);
-
-  	
-	if(damage>10)
-	{
-		wall.shapeColor=color(255,0,0);
-		
-	}
-
-	
-
-	if(damage<10)
-	{
-		wall.shapeColor=color(0,255,0);
-	}
-	
-  }
-
-
-  drawSprites();
+  rectMode(CENTER);
+  background(0);
+ 
+  dustbinObj.display();
+  paperObject.display();
+  groundObject.display();
+  
+ 
+  
+  
  
 }
 
+function keyPressed() {
+  	if (keyCode === UP_ARROW) {
 
-function hasCollided(lbullet, lwall)
-{
-	bulletRightEdge=lbullet.x +lbullet.width;
-	wallLeftEdge=lwall.x;
-	if (bulletRightEdge>=wallLeftEdge)
-	{
-		return true
-	}
-	return false;
+    	Matter.Body.applyForce(paperObject.body,paperObject.body.position,{x:85,y:-85});
+    
+  	}
 }
+
+
+
 
 
